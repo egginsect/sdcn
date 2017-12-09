@@ -71,9 +71,12 @@ class BaseModel(object):
         self.inputs = {} 
         self.feeding_inputs = {
             'isTrain':tf.placeholder(tf.bool, []),
-            'images':tf.placeholder(tf.float32, (None, 32, 32, 1)), 
             'labels':tf.placeholder(tf.int64, (None))
         }
+        if self.config.grayscale:
+            self.inputs['images'] = tf.placeholder(tf.float32, (None, 32, 32, 1)) 
+        else:
+            self.inputs['images'] = tf.placeholder(tf.float32, (None, 32, 32, 3)) 
         self.inputs.update(self.feeding_inputs)
 
         if self.config.data_augmentation:
