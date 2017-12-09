@@ -4,11 +4,12 @@ import cv2
 import numpy as np
 from collections import defaultdict
 from random import choice
+import ipdb
 class BatchGenerator(object):
-    def __init__(self, imgs, labels, batch_size, grayscale=False, phase='test'):
+    def __init__(self, imgs, labels, batch_size, grayscale, phase='test'):
         self.batch_size = batch_size
-        self.phase = phase
         self.grayscale = grayscale
+        self.phase = phase
         if phase=='test':
             self.pairs = list(zip(imgs, labels))
         else:
@@ -42,8 +43,6 @@ class BatchGenerator(object):
             pass
 
     def preprocess(self, pair):
-        #gray_image = cv2.cvtColor(pair[0], cv2.COLOR_BGR2GRAY)
-        #return np.expand_dims((gray_image-128)/128, axis=2), pair[1]
         img = pair[0]
         if self.grayscale:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)[:,None]

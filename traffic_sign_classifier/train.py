@@ -62,7 +62,6 @@ validBG = BatchGenerator(X_valid, y_valid, config.batch_size, config.grayscale)
 testBG = BatchGenerator(X_valid, y_valid, config.batch_size, config.grayscale)
 config.decay_steps = trainBG.num_batches*config.num_epoch
 label_dict =  {}
-ipdb.set_trace()
 with open('signnames.csv') as f:
     reader = csv.DictReader(f)
     for row in reader:

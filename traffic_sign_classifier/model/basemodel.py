@@ -6,6 +6,7 @@ import glob
 import time
 from collections import defaultdict
 import math
+import ipdb
 class BaseModel(object):
     def __init__(self, config, label_names=None):
         self.label_names = label_names
@@ -74,9 +75,9 @@ class BaseModel(object):
             'labels':tf.placeholder(tf.int64, (None))
         }
         if self.config.grayscale:
-            self.inputs['images'] = tf.placeholder(tf.float32, (None, 32, 32, 1)) 
+            self.feeding_inputs['images'] = tf.placeholder(tf.float32, (None, 32, 32, 1)) 
         else:
-            self.inputs['images'] = tf.placeholder(tf.float32, (None, 32, 32, 3)) 
+            self.feeding_inputs['images'] = tf.placeholder(tf.float32, (None, 32, 32, 3)) 
         self.inputs.update(self.feeding_inputs)
 
         if self.config.data_augmentation:
