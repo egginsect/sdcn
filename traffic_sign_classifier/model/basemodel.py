@@ -58,13 +58,19 @@ class BaseModel(object):
             self.sess.run(tf.global_variables_initializer())
             
     def data_augmetation(self, images):
-        angle = tf.random_uniform([1], minval=-20, maxval=20, dtype=tf.float32)*math.pi/180
-        images = tf.contrib.image.rotate(images, angle)
-        images = tf.image.random_brightness(images, 0.5) 
-        """
-        images = tf.map_fn(lambda img: tf.random_crop(tf.pad(img,\
-            tf.constant([[4,4], [4, 4], [0,0]])), [32, 32, 1]), images)
-        """
+        samples = tf.squeeze(tf.multinomial(tf.fill([4,2], 10.), 1))
+        def random_rotate():
+            angle = tf.random_uniform([1], minval=-20, maxval=20, dtype=tf.float32)*math.pi/180
+            return tf.contrib.image.rotate(images, angle)
+        images = tf.cond(tf.equal(samples[0],1), random_rotate, lambda: tf.identity(images))
+        random_brightness = lambda : tf.image.random_brightness(images, 1) 
+        images = tf.cond(tf.equal(samples[1],1), random_brightness, lambda: tf.identity(images))
+        random_contrast = lambda : tf.image.random_contrast(images, 1, 5) 
+        images = tf.cond(tf.equal(samples[2],1), random_contrast, lambda: tf.identity(images))
+        def random_crop():
+            return tf.map_fn(lambda img: tf.random_crop(tf.pad(img,\
+                tf.constant([[4,4], [4, 4], [0,0]])), [32, 32, 1]), images)
+        images = tf.cond(tf.equal(samples[3],1), random_crop, lambda: tf.identity(images))
         return images
         
         
