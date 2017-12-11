@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 from collections import defaultdict
 from random import choice
-import ipdb
 class BatchGenerator(object):
     def __init__(self, imgs, labels, batch_size, grayscale, phase='test'):
         self.batch_size = batch_size
@@ -45,7 +44,7 @@ class BatchGenerator(object):
     def preprocess(self, pair):
         img = pair[0]
         if self.grayscale:
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)[:,None]
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)[...,None]
         return (img-128)/128 , pair[1]
     
     def reload(self):

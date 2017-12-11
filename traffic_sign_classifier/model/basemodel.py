@@ -6,7 +6,8 @@ import glob
 import time
 from collections import defaultdict
 import math
-import ipdb
+import numpy as np
+import pdb
 class BaseModel(object):
     def __init__(self, config, label_names=None):
         self.label_names = label_names
@@ -63,14 +64,16 @@ class BaseModel(object):
             angle = tf.random_uniform([1], minval=-20, maxval=20, dtype=tf.float32)*math.pi/180
             return tf.contrib.image.rotate(images, angle)
         images = tf.cond(tf.equal(samples[0],1), random_rotate, lambda: tf.identity(images))
-        random_brightness = lambda : tf.image.random_brightness(images, 1) 
+        random_brightness = lambda : tf.image.random_brightness(images, 10) 
         images = tf.cond(tf.equal(samples[1],1), random_brightness, lambda: tf.identity(images))
-        random_contrast = lambda : tf.image.random_contrast(images, 1, 5) 
+        random_contrast = lambda : tf.image.random_contrast(images, 1, 10) 
         images = tf.cond(tf.equal(samples[2],1), random_contrast, lambda: tf.identity(images))
+        """
         def random_crop():
             return tf.map_fn(lambda img: tf.random_crop(tf.pad(img,\
-                tf.constant([[4,4], [4, 4], [0,0]])), [32, 32, 1]), images)
+                tf.constant([[3,3], [3, 3], [0,0]])), [32, 32, 1]), images)
         images = tf.cond(tf.equal(samples[3],1), random_crop, lambda: tf.identity(images))
+        """
         return images
         
         
@@ -85,6 +88,8 @@ class BaseModel(object):
         else:
             self.feeding_inputs['images'] = tf.placeholder(tf.float32, (None, 32, 32, 3)) 
         self.inputs.update(self.feeding_inputs)
+        center_cropped = tf.map_fn(lambda img: tf.image.central_crop(img, 0.8), self.inputs['images'])
+        self.inputs['images'] = tf.image.resize_images(center_cropped, [32,32])
 
         if self.config.data_augmentation:
 
@@ -117,6 +122,7 @@ class BaseModel(object):
     def createMetrics(self):
         self.prediction = tf.argmax(self.logits, axis=-1)
         self.accuracy = tf.reduce_mean(tf.cast(tf.equal(self.inputs['labels'], self.prediction), tf.float32))
+        self.top5, _ = tf.nn.top_k(tf.nn.softmax(self.logits), 5)
 
     def createSummary(self):
         with tf.name_scope('train'):
@@ -140,17 +146,17 @@ class BaseModel(object):
         return self.sess.run(evaldict, feed_dict)
     
     def predict(self, data):
-        label = self.sess.run(self.prediction , feed_dict={v:data[k] for k,v in self.inputs.items()})
-        return self.label_names[label] 
+        result = self.sess.run([self.prediction, self.top5] , feed_dict={v:data[k] for k,v in self.feeding_inputs.items() if k in data})
+        return [self.label_names[lab] for lab in result[0]], result[1]
 
-    def validStep(self, valbg):
+    def testStep(self, testbg, validation=False):
         evaldict = {
             'loss':self.loss, 
             'accuracy':self.accuracy,
         }
         evalvals = defaultdict(list) 
         total_numdata = 0
-        for item in valbg:
+        for item in testbg:
             item['isTrain'] = False
             feed_dict = {v:item[k] for k,v in self.feeding_inputs.items()}
             result = self.sess.run(evaldict, feed_dict)
@@ -158,11 +164,14 @@ class BaseModel(object):
             total_numdata+=numdata
             for k in result:
                 evalvals[k].append(result[k]*numdata)
-        validation_summary = tf.Summary()
+        if validation:
+            validation_summary = tf.Summary()
         for k in evalvals:
             evalvals[k] = sum(evalvals[k])/total_numdata
-            validation_summary.value.add(tag='validation/'+k, simple_value=evalvals[k])
-        evalvals['summary'] = validation_summary 
+            if validation:
+                validation_summary.value.add(tag='validation/'+k, simple_value=evalvals[k])
+        if validation:
+            evalvals['summary'] = validation_summary 
         return evalvals
         
     def trainEpoch(self, bg, valbg, epoch, current_step_inside_epoch):
@@ -180,7 +189,7 @@ class BaseModel(object):
                     print('Train: epoch {} step {}, loss {}, accuracy {}'.format(epoch, result['global_step'],
                     sum(train_loss)/len(train_loss), sum(train_accuracy)/len(train_accuracy)))
                     train_loss = []
-                    valid_result = self.validStep(valbg)
+                    valid_result = self.testStep(valbg, validation=True)
                     print('Validation: epoch {} step {}, loss {}, accuracy {}'.format(epoch, result['global_step'],
                     valid_result['loss'], valid_result['accuracy']))
                     self.summary_writer.add_summary(result['summary'], global_step=result['global_step'])
