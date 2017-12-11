@@ -99,20 +99,22 @@ Layer         		|     Description	        					|
 
 
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
-
-To train the model, I used an ....
+The model is trained with Adam optimizer with the initial learning rate on 0.001. During training I drop the learning rate by the factor of ten one time (1e-3). The batch size is 80. The number of epochs was 89.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* training set accuracy ~ 97%
+* validation set accuracy 93.5%
+* test set accuracy of 93.6%
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
+I first chose LeNet since it's a simple model and easier to train. I also use data augmentation including flip up-down, flip left-right and random crop.
 * What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
+The accuracy was really bad. I later realized that flipping images changes the meaning of signs. I also found the training accuracy of LeNet didn't exceed 90%, I think the model architecture was not complex enough to learn information.
+* How was the architecture adjusted and why was it adjusted? 
+I use the following data augmentation instead: random brightness, random contrast, random rotate for small angle. To make the training faster I also use Self-Normalized Linear Unit. I also add a f
 * Which parameters were tuned? How were they adjusted and why?
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
 
