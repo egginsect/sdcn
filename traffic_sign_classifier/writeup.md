@@ -13,9 +13,8 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/visualization.jpg "Visualization"
-[image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
+[taining_image]: ./figures/training_data.png "Training Image"
+[training_data_statics]: ./figures/training_data_statics.png "Training Data Statistics"
 [test_image1]: ./examples/placeholder.png "Traffic Sign 1"
 [test_image2]: ./examples/placeholder.png "Traffic Sign 2"
 [test_image3]: ./examples/placeholder.png "Traffic Sign 3"
@@ -39,9 +38,13 @@ The summary statistics of the traffic signs data set:
 
 #### 2. Include an exploratory visualization of the dataset.
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
+Here is an exploratory visualization of the data set. It is a bar chart showing the histogram of different classes in the data. We can see the dataset are highly imbalanced.
 
-![alt text][image1]
+![training_data_statics]
+
+Here are some examples of training data.
+
+![taining_image]
 
 ### Design and Test a Model Architecture
 
@@ -49,7 +52,7 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 
 
 As a first step, I decided to convert the images to grayscale because it's more robust to color distortion.
-I then balanced the number of data for each class since it's unbalanced.
+Since the number of data for each class are unbalanced, I sample images in classes with replacement up to the same number.
 
 I also normalized the image data because neural networks does better on normalized inputs which not deviate from zero too much.
 
