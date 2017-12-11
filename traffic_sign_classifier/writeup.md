@@ -1,11 +1,5 @@
 # **Traffic Sign Recognition** 
 
-## Writeup
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Build a Traffic Sign Recognition Project**
 
 The goals / steps of this project are the following:
@@ -22,28 +16,20 @@ The goals / steps of this project are the following:
 [image1]: ./examples/visualization.jpg "Visualization"
 [image2]: ./examples/grayscale.jpg "Grayscaling"
 [image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
-
-## Rubric Points
-### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
+[test_image1]: ./examples/placeholder.png "Traffic Sign 1"
+[test_image2]: ./examples/placeholder.png "Traffic Sign 2"
+[test_image3]: ./examples/placeholder.png "Traffic Sign 3"
+[test_image4]: ./examples/placeholder.png "Traffic Sign 4"
+[test_image5]: ./examples/placeholder.png "Traffic Sign 5"
 
 ---
 ### Writeup / README
-
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
-
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
 ### Data Set Summary & Exploration
 
 #### 1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
-I used the pandas library to calculate summary statistics of the traffic
-signs data set:
+The summary statistics of the traffic signs data set:
 
 * The size of training set is 34799
 * The size of the validation set is 4410
@@ -67,13 +53,19 @@ I then balanced the number of data for each class since it's unbalanced.
 
 I also normalized the image data because neural networks does better on normalized inputs which not deviate from zero too much.
 
-I decided to generate additional data by the following data augmentation techniques
+Since traffic signs usually lies in centers of images, I crop images at center and rescale to original size.
+
+In order to make model more robust to distorted or poor-quality images, I decided to generate additional data by the following data augmentation techniques:
+* Random roate by -20 to 20 degree
+* Random brightness
+* Random contrast
 
 
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 Based on LeNet, I add few layers according to VGG16 to make the model more complex.
-To make training faster, I use SELU activation to make inputs of layers normalized.
+To make training faster, I use SELU activation to make inputs of layers normalized. 
+Normalized inputs make the optimization faster since the gradient updates in different coordinates are more uniform.
 My final model consisted of the following layers:
 
 Layer         		|     Description	        					| 
