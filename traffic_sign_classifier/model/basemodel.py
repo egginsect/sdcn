@@ -122,7 +122,7 @@ class BaseModel(object):
     def createMetrics(self):
         self.prediction = tf.argmax(self.logits, axis=-1)
         self.accuracy = tf.reduce_mean(tf.cast(tf.equal(self.inputs['labels'], self.prediction), tf.float32))
-        self.top5, _ = tf.nn.top_k(tf.nn.softmax(self.logits), 5)
+        self.top5, self.top5_idx= tf.nn.top_k(tf.nn.softmax(self.logits), 5)
 
     def createSummary(self):
         with tf.name_scope('train'):
@@ -146,8 +146,14 @@ class BaseModel(object):
         return self.sess.run(evaldict, feed_dict)
     
     def predict(self, data):
-        result = self.sess.run([self.prediction, self.top5] , feed_dict={v:data[k] for k,v in self.feeding_inputs.items() if k in data})
-        return [self.label_names[lab] for lab in result[0]], result[1]
+        evaldict = {
+            'prediction':self.prediction,
+            'top5':self.top5,
+            'top5_idx':self.top5_idx
+        }
+        result = self.sess.run(evaldict, feed_dict={v:data[k] for k,v in self.feeding_inputs.items() if k in data})
+        print([self.label_names[idx] for idx in result['prediction']])
+        return result
 
     def testStep(self, testbg, validation=False):
         evaldict = {
