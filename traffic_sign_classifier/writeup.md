@@ -107,27 +107,35 @@ My final model results were:
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
 
-I first chose LeNet since it's a simple model and easier to train. I also use data augmentation including flip up-down, flip left-right and random crop.
+  * I first chose LeNet since it's a simple model and easier to train. I also use data augmentation including flip up-down, flip left-right and random crop.
 * What were some problems with the initial architecture?
 
-The accuracy was really bad. I later realized that flipping images changes the meaning of signs. I also found the training accuracy of LeNet didn't exceed 90%, I think the model architecture was not complex enough to learn information.
+  * The accuracy was really bad. I later realized that flipping images changes the meaning of signs. I also found the training accuracy of LeNet didn't exceed 90%, I think the model architecture was not complex enough to learn information.
 * How was the architecture adjusted and why was it adjusted? 
 
-I use the following data augmentation instead: random brightness, random contrast, random rotate for small angle. To make the training faster I also use Self-Normalized Linear Unit. I also crop center 64% of the image and resize, since most of traffic signs lies in the center.
+  * I use the following data augmentation instead: random brightness, random contrast, random rotate for small angle. 
+  * To make the training faster I also use Self-Normalized Linear Unit. I also crop center 64% of the image and resize, since most of traffic signs lies in the center.
 * Which parameters were tuned? How were they adjusted and why?
 
-I changed the dropout for regularization since the model was overfittings. However too much dropout damages the performance. I use keep probability of 0.8. During training I found optimization didn't make progress and jumping at certain value. It's possible the optimizer bounce back-and-forth when approaching the optimal. I drop the learning rate by the factor of 10 during the middle of the trainig and the model stated to make progress.
+  * I changed the dropout for regularization since the model was overfittings. However too much dropout damages the performance. I use keep probability of 0.8. 
+  * During training I found optimization didn't make progress and jumping at certain value. It's possible the optimizer bounce back-and-forth when approaching the optimal. I drop the learning rate by the factor of 10 during the middle of the trainig and the model stated to make progress.
 
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
 
-Convolution are used since we want the model to capture spatial information. Pooling are used to do locally summarization of patches. Fully connected layers are used to do summarization of the spatial features. I use selu as the activation function for faster and stable training.
+  * Convolution are used since we want the model to capture spatial information. 
+  * Pooling are used to do locally summarization of patches. 
+  * Fully connected layers are used to do summarization of the spatial features.
+  * I use selu as the activation function for faster and stable training.
 
 If a well known architecture was chosen:
 * What architecture was chosen?
-  LeNet was used as the base. But I added a few conconvolution layers.
+  * LeNet was used as the base. But I added a few conconvolution layers.
 * Why did you believe it would be relevant to the traffic sign application?
-  LeNet was initially used for MNist data. Since traffic signs are simple geometry figures, I believe it's useful.
+  * LeNet was initially used for MNist data. Since traffic signs are simple geometry figures, I believe it's useful.
 * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
+  * training set accuracy ~ 97%
+  * validation set accuracy 93.5%
+  * test set accuracy of 93.6%
  
 
 ### Test a Model on New Images
