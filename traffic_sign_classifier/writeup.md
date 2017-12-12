@@ -16,6 +16,7 @@ The goals / steps of this project are the following:
 [taining_image]: ./figures/training_data.png "Training Image"
 [training_data_statics]: ./figures/training_data_statics.png "Training Data Statistics"
 [testing_images]: ./figures/testing_images.png "Testin Image"
+[test_top5]: ./figures/top5_result.png "Top 5 result"
 
 ---
 ### Writeup / README
@@ -48,7 +49,7 @@ Here are some examples of training data.
 
 
 As a first step, I decided to convert the images to grayscale because it's more robust to color distortion.
-Since the number of data for each class are unbalanced, I sample images in classes with replacement up to the same number.
+Since the number of data for each class are unbalanced, I sampled images in classes with replacement up to the same number.
 
 I also normalized the image data because neural networks does better on normalized inputs which not deviate from zero too much.
 
@@ -63,7 +64,7 @@ In order to make model more robust to distorted or poor-quality images, I decide
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 Based on LeNet, I add few layers according to VGG16 to make the model more complex.
-To make training faster, I use SELU activation to make inputs of layers normalized. 
+To make training faster, I use Self-Normalized Linear Unit (SELU) activation to make inputs of layers normalized. 
 Normalized inputs make the optimization faster since the gradient updates in different coordinates are more uniform.
 My final model consisted of the following layers:
 
@@ -95,7 +96,7 @@ Layer         		|     Description	        					|
 
 
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
-The model is trained with Adam optimizer with the initial learning rate on 0.001. During training I drop the learning rate by the factor of ten one time (1e-3). The batch size is 80. The number of epochs was 89.
+The model was trained with Adam optimizer with the initial learning rate on 0.001. During training I dropped the learning rate by the factor of ten one time (1e-3). The batch size was 80. The number of epochs was 89.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
@@ -107,25 +108,26 @@ My final model results were:
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
 
-  * I first chose LeNet since it's a simple model and easier to train. I also use data augmentation including flip up-down, flip left-right and random crop.
+  * I first chose LeNet since it's a simple model and easier to train. I also used data augmentation including flip up-down, flip left-right and random crop.
 * What were some problems with the initial architecture?
 
-  * The accuracy was really bad. I later realized that flipping images changes the meaning of signs. I also found the training accuracy of LeNet didn't exceed 90%, I think the model architecture was not complex enough to learn information.
+  * The accuracy was really bad. I later realized that flipping images changes the meaning of signs. I also found the training accuracy of LeNet didn't exceed 90%, I thought the model architecture was not complex enough to learn to classify traffic signs.
 * How was the architecture adjusted and why was it adjusted? 
 
   * I use the following data augmentation instead: random brightness, random contrast, random rotate for small angle. 
-  * To make the training faster I also use Self-Normalized Linear Unit. I also crop center 64% of the image and resize, since most of traffic signs lies in the center.
+  * To make the training faster I also use SELU. 
+  * I also crop center 64% of the image and resize, since most of traffic signs lies in the center.
 * Which parameters were tuned? How were they adjusted and why?
 
   * I changed the dropout for regularization since the model was overfittings. However too much dropout damages the performance. I use keep probability of 0.8. 
-  * During training I found optimization didn't make progress and jumping at certain value. It's possible the optimizer bounce back-and-forth when approaching the optimal. I drop the learning rate by the factor of 10 during the middle of the trainig and the model stated to make progress.
+  * During training I found optimization didn't make progress and jumping at certain value. It's possible the optimizer bounce back-and-forth when approaching the optimal due to too large learning rate. I drop the learning rate by the factor of 10 during the middle of the trainig and the model stated to make progress.
 
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
 
   * Convolution are used since we want the model to capture spatial information. 
-  * Pooling are used to do locally summarization of patches. 
+  * Pooling are used to do locally summarization of image patches. 
   * Fully connected layers are used to do summarization of the spatial features.
-  * I use selu as the activation function for faster and stable training.
+  * I use SELU as the activation function for faster and stable training.
 
 If a well known architecture was chosen:
 * What architecture was chosen?
@@ -143,7 +145,9 @@ If a well known architecture was chosen:
 #### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
 Here are five German traffic signs that I found on the web:
+
 ![testing_images]
+
 The fourth image must harder to be classified since it's reflecting lights. Random brightness included in data augmentation should help.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
@@ -167,12 +171,10 @@ The model was able to correctly guess 5 of the 5 traffic signs, which gives an a
 * validation set accuracy 93.5%
 * test set accuracy of 93.6%
 
+Below are top5 probability and it's label for each testing image:
 
+![test_top5]
 
-
-For the second image ... 
-
-### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-#### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+We can see the top 5 probability for each testing image often looks similiar ( e.g. The model was confused Speed limit (30km/h) with other speed limit signs).
 
 
