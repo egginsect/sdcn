@@ -15,11 +15,7 @@ The goals / steps of this project are the following:
 
 [taining_image]: ./figures/training_data.png "Training Image"
 [training_data_statics]: ./figures/training_data_statics.png "Training Data Statistics"
-[test_image1]: ./examples/placeholder.png "Traffic Sign 1"
-[test_image2]: ./examples/placeholder.png "Traffic Sign 2"
-[test_image3]: ./examples/placeholder.png "Traffic Sign 3"
-[test_image4]: ./examples/placeholder.png "Traffic Sign 4"
-[test_image5]: ./examples/placeholder.png "Traffic Sign 5"
+[test_images]: ./figures/testing_images.png
 
 ---
 ### Writeup / README
@@ -110,17 +106,27 @@ My final model results were:
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
+
 I first chose LeNet since it's a simple model and easier to train. I also use data augmentation including flip up-down, flip left-right and random crop.
 * What were some problems with the initial architecture?
+
 The accuracy was really bad. I later realized that flipping images changes the meaning of signs. I also found the training accuracy of LeNet didn't exceed 90%, I think the model architecture was not complex enough to learn information.
 * How was the architecture adjusted and why was it adjusted? 
-I use the following data augmentation instead: random brightness, random contrast, random rotate for small angle. To make the training faster I also use Self-Normalized Linear Unit. I also add a f
+
+I use the following data augmentation instead: random brightness, random contrast, random rotate for small angle. To make the training faster I also use Self-Normalized Linear Unit. I also crop center 64% of the image and resize, since most of traffic signs lies in the center.
 * Which parameters were tuned? How were they adjusted and why?
+
+I changed the dropout for regularization since the model was overfittings. However too much dropout damages the performance. I use keep probability of 0.8. During training I found optimization didn't make progress and jumping at certain value. It's possible the optimizer bounce back-and-forth when approaching the optimal. I drop the learning rate by the factor of 10 during the middle of the trainig and the model stated to make progress.
+
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
+
+Convolution are used since we want the model to capture spatial information. Pooling are used to do locally summarization of patches. Fully connected layers are used to do summarization of the spatial features. I use selu as the activation function for faster and stable training.
 
 If a well known architecture was chosen:
 * What architecture was chosen?
+  LeNet was used as the base. But I added a few conconvolution layers.
 * Why did you believe it would be relevant to the traffic sign application?
+  LeNet was initially used for MNist data. Since traffic signs are simple geometry figures, I believe it's useful.
 * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
  
 
@@ -151,18 +157,13 @@ Here are the results of the prediction:
 The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
-
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+* training set accuracy ~ 97%
+* validation set accuracy 93.5%
+* test set accuracy of 93.6%
 
 For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
 
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+![testing_images.png]
 
 
 For the second image ... 
