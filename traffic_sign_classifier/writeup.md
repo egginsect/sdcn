@@ -175,6 +175,6 @@ Below are top5 probability and it's label for each testing image:
 
 ![test_top5]
 
-We can see the top 5 probability for each testing image often looks similiar ( e.g. The model was confused Speed limit (30km/h) with other speed limit signs).
-
+We can see the classes got top 5 probability for each testing image often looks similiar.
+For example, the model was confused Speed limit (30km/h) with other speed limit signs.
 
