@@ -15,7 +15,7 @@ The goals / steps of this project are the following:
 
 [taining_image]: ./figures/training_data.png "Training Image"
 [training_data_statics]: ./figures/training_data_statics.png "Training Data Statistics"
-[test_images]: ./figures/testing_images.png
+[testing_images]: ./figures/testing_images.png "Testin Image"
 
 ---
 ### Writeup / README
@@ -135,11 +135,8 @@ If a well known architecture was chosen:
 #### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
 Here are five German traffic signs that I found on the web:
-
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
-
-The first image might be difficult to classify because ...
+![testing_images]
+The fourth image must harder to be classified since it's reflecting lights. Random brightness included in data augmentation should help.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
@@ -147,23 +144,22 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Right-of-way at the next intersection    		| Right-of-way at the next intersection   									| 
+| Speed limit (30km/h)     			| Speed limit (30km/h)										|
+| Roundabout mandatory				| Roundabout mandatory											|
+| Road work    		| Road work				 				|
+| Keep right			| Keep right      							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 5 of the 5 traffic signs, which gives an accuracy of 100%. This compares favorably to the accuracy on the test set of 93%.
+
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 * training set accuracy ~ 97%
 * validation set accuracy 93.5%
 * test set accuracy of 93.6%
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
 
-![testing_images.png]
 
 
 For the second image ... 
