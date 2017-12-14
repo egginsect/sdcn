@@ -5,7 +5,6 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 from itertools import cycle, chain
 from random import choice
-import ipdb
 import numpy as np
 class BatchGenerator(object):
     def __init__(self, data, process_dict, batch_size, phase='test'):
