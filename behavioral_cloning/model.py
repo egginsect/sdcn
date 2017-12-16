@@ -19,6 +19,6 @@ def LeNet():
     model.add(Flatten())
     model.add(Dense(128, activation='selu'))
     model.add(Dropout(0.8))
-    model.add(Dense(1, activation='tanh'))
+    model.add(Dense(1))
     model.compile(loss='mse', optimizer='adam')
     return model
