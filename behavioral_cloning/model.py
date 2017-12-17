@@ -11,8 +11,8 @@ def BaseModel():
 
 def LeNet():
     model = Sequential()
-    model.add(Conv2D(32, kernel_size=(3, 3),activation='selu', 
-    input_shape=[160, 320, 3]))
+    model.add(Lambda(lambda x: x/255.0 -0.5, input_shape=[160, 320, 3]))
+    model.add(Conv2D(32, kernel_size=(3, 3),activation='selu'))
     model.add(Conv2D(64, (3, 3), activation='selu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.8))
