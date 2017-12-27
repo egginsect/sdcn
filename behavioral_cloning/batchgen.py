@@ -41,7 +41,7 @@ class BatchGenerator(object):
     def data_augmentation(self, processed):
         for item in processed['images']:
             yield [item], processed['controll']
-            yield [np.flip_lr(item)], [-val for val in processed['controll']]
+            yield [np.fliplr(item)], [-val for val in processed['controll']]
 
     def preprocess(self, datum):
         processed = OrderedDict() 

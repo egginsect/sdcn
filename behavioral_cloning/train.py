@@ -10,7 +10,7 @@ import argparse
 import sys
 parser = argparse.ArgumentParser(description='Configs for training')
 parser.add_argument('--split_threshod', default=.8, help='Training data percentage', type=float)
-parser.add_argument('--batch_size', default=20, help='Batch Size', type=int)
+parser.add_argument('--batch_size', default=60, help='Batch Size', type=int)
 parser.add_argument('-i','--datadir', default='', help='input data', type=str)
 parser.add_argument('-l', '--load_pretrained', dest='load_pretrained',help='Load pretrained model', action='store_true')
 parser.set_defaults(load_pretrained=False)
