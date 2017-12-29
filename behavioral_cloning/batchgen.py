@@ -6,6 +6,7 @@ from collections import defaultdict, OrderedDict
 from itertools import cycle, chain
 from random import choice
 import numpy as np
+import ipdb
 class BatchGenerator(object):
     def __init__(self, data, process_dict, batch_size, phase='test'):
         self.batch_size = batch_size
@@ -39,9 +40,9 @@ class BatchGenerator(object):
             self.reload()
 
     def data_augmentation(self, processed):
-        for item in processed['images']:
-            yield [item], processed['controll']
-            yield [np.fliplr(item)], [-val for val in processed['controll']]
+        for item, controll in zip(processed['images'], processed['controll']):
+            yield [item], controll 
+            yield [np.fliplr(item)], -controll
 
     def preprocess(self, datum):
         processed = OrderedDict() 
