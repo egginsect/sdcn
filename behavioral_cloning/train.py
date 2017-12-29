@@ -10,7 +10,8 @@ import argparse
 import sys
 parser = argparse.ArgumentParser(description='Configs for training')
 parser.add_argument('--split_threshod', default=.8, help='Training data percentage', type=float)
-parser.add_argument('--batch_size', default=60, help='Batch Size', type=int)
+parser.add_argument('--batch_size', default=25, help='Batch Size', type=int)
+parser.add_argument('--num_epochs', default=10, help='Number of Epochs', type=int)
 parser.add_argument('-i','--datadir', default='', help='input data', type=str)
 parser.add_argument('-l', '--load_pretrained', dest='load_pretrained',help='Load pretrained model', action='store_true')
 parser.set_defaults(load_pretrained=False)
@@ -26,7 +27,7 @@ train_valid_split_idx = int(len(data)*config.split_threshod)
 train_data, valid_data = data[:train_valid_split_idx], data[train_valid_split_idx:]
 process_dict = OrderedDict()
 process_dict['images'] = {'collect':['center'],
-            'process':lambda fn: cv2.imread(os.path.join(config.datadir, 'IMG', os.path.basename(fn)))} 
+            'process':lambda fn: cv2.cvtColor(cv2.imread(os.path.join(config.datadir, 'IMG', os.path.basename(fn))), cv2.COLOR_BGR2RGB)} 
 process_dict['controll']={'collect':['steering'],
             'process':float}
 
@@ -38,7 +39,7 @@ else:
     model = LeNet()
 try:
     model.fit_generator(trainBG, steps_per_epoch=trainBG.num_batches, validation_data=validBG,
-    validation_steps=validBG.num_batches, epochs=40)
+    validation_steps=validBG.num_batches, epochs=config.num_epochs)
 except KeyboardInterrupt:
     model.save('model.h5')
     print('\n Model saved to model.h5')
