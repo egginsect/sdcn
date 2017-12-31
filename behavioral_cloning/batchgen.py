@@ -14,7 +14,7 @@ class BatchGenerator(object):
         self.process_dict = process_dict
         self.phase = phase
         self.num_data = len(self.data)
-        self.num_batches = ceil(float(len(self.data))/batch_size)
+        self.num_batches = ceil(float(len(self.data)*2)/batch_size)
         self.reload()
         
     def balanceData(self, data, labels):

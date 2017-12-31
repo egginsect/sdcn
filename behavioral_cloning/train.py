@@ -2,20 +2,37 @@ import cv2
 import csv
 import os
 import ipdb
+import random
 from collections import defaultdict, OrderedDict
 from batchgen import BatchGenerator
 from model import BaseModel, LeNet
+import tensorflow as tf
 from keras.models import load_model
+from keras import backend as K
 import argparse
 import sys
 parser = argparse.ArgumentParser(description='Configs for training')
-parser.add_argument('--split_threshod', default=.8, help='Training data percentage', type=float)
-parser.add_argument('--batch_size', default=25, help='Batch Size', type=int)
+parser.add_argument('--split_threshold', default=.8, help='Training data percentage', type=float)
+parser.add_argument('--gpu_fraction', default=.8, help='Percentage of GPU memory allowed to use', type=float)
+parser.add_argument('--batch_size', default=30, help='Batch Size', type=int)
 parser.add_argument('--num_epochs', default=10, help='Number of Epochs', type=int)
 parser.add_argument('-i','--datadir', default='', help='input data', type=str)
 parser.add_argument('-l', '--load_pretrained', dest='load_pretrained',help='Load pretrained model', action='store_true')
 parser.set_defaults(load_pretrained=False)
 config = parser.parse_args()
+def get_session(gpu_fraction=config.gpu_fraction):
+    '''Assume that you have 6GB of GPU memory and want to allocate ~2GB'''
+
+    num_threads = os.environ.get('OMP_NUM_THREADS')
+    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_fraction)
+
+    if num_threads:
+        return tf.Session(config=tf.ConfigProto(
+            gpu_options=gpu_options, intra_op_parallelism_threads=num_threads))
+    else:
+        return tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
+K.set_session(get_session())
+
 data = [] 
 imgDataName = ['center', 'left', 'right']
 controllDataName = ['steering', 'throttle', 'brake', 'speed']
@@ -23,7 +40,8 @@ with open(os.path.join(config.datadir, 'driving_log.csv')) as csvfile:
     reader = csv.DictReader(csvfile, fieldnames=imgDataName+controllDataName)
     for line in reader:
         data.append(line)
-train_valid_split_idx = int(len(data)*config.split_threshod)
+train_valid_split_idx = int(len(data)*config.split_threshold)
+random.Random(10).shuffle(data)
 train_data, valid_data = data[:train_valid_split_idx], data[train_valid_split_idx:]
 process_dict = OrderedDict()
 process_dict['images'] = {'collect':['center'],

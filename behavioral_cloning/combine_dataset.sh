@@ -8,10 +8,12 @@ shift
 files=""
 for folder in $@
 do
-  echo $folder
-  files="$files $folder/driving_log.csv" 
-  ls -l $folder/IMG | wc -l
-  find $folder/IMG -name '*.jpg' -exec cp {} $output/IMG \;
+  if [ -d $folder ]; then
+    echo $folder
+    files="$files $folder/driving_log.csv" 
+    ls -l $folder/IMG | wc -l
+    find $folder/IMG -name '*.jpg' -exec cp {} $output/IMG \;
+  fi
 done
 
 echo "files to be combined are $files" 
