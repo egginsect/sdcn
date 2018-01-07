@@ -4,7 +4,7 @@ import glob
 class LaneFinder(object):
     def __init__(self, calibrate_img_files='camera_cal/calibration*.jpg'):
         self.compute_camera_calibration(calibrate_img_files)
-        self.src = np.float32([[600, 450], [700, 450], [1100, 710], [240, 710]])
+        self.src = np.float32([[550, 500], [780, 500], [1100, 710], [240, 710]])
         self.dst = np.float32([[240, 100], [1080, 100], [1100, 710], [220, 710]])
 
     def compute_camera_calibration(self, calibrate_img_files):
