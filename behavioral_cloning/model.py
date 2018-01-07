@@ -1,6 +1,6 @@
 import os
 import tensorflow as tf
-from keras.models import Sequential
+from keras.models import Sequential, Input
 from keras.layers import Dense, Dropout, Flatten, Lambda
 from keras.layers import Conv2D, MaxPooling2D, Cropping2D
 
@@ -13,7 +13,8 @@ def BaseModel():
 
 def LeNet():
     model = Sequential()
-    model.add(Cropping2D(cropping=((60,0),(0,0)), input_shape=[160, 320, 3])) 
+    model.add(Cropping2D(cropping=((40,0),(0,0)), input_shape=[160, 320, 3]))
+    #model.add(Lambda(lambda x: x/255.0 -0.5, input_shape=[160, 320, 3]))
     model.add(Lambda(lambda x: x/255.0 -0.5))
     model.add(Conv2D(32, kernel_size=(3, 3),activation='selu'))
     model.add(Conv2D(64, (3, 3), activation='selu'))

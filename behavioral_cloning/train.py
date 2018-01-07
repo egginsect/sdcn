@@ -13,9 +13,9 @@ import argparse
 import sys
 parser = argparse.ArgumentParser(description='Configs for training')
 parser.add_argument('--split_threshold', default=.8, help='Training data percentage', type=float)
-parser.add_argument('--gpu_fraction', default=.8, help='Percentage of GPU memory allowed to use', type=float)
+parser.add_argument('--gpu_fraction', default=.4, help='Percentage of GPU memory allowed to use', type=float)
 parser.add_argument('--batch_size', default=30, help='Batch Size', type=int)
-parser.add_argument('--num_epochs', default=10, help='Number of Epochs', type=int)
+parser.add_argument('--num_epochs', default=5, help='Number of Epochs', type=int)
 parser.add_argument('-i','--datadir', default='', help='input data', type=str)
 parser.add_argument('-l', '--load_pretrained', dest='load_pretrained',help='Load pretrained model', action='store_true')
 parser.set_defaults(load_pretrained=False)
@@ -41,7 +41,7 @@ with open(os.path.join(config.datadir, 'driving_log.csv')) as csvfile:
     for line in reader:
         data.append(line)
 train_valid_split_idx = int(len(data)*config.split_threshold)
-random.Random(10).shuffle(data)
+random.Random(29944).shuffle(data)
 train_data, valid_data = data[:train_valid_split_idx], data[train_valid_split_idx:]
 process_dict = OrderedDict()
 process_dict['images'] = {'collect':['center'],
@@ -58,7 +58,7 @@ else:
 try:
     model.fit_generator(trainBG, steps_per_epoch=trainBG.num_batches, validation_data=validBG,
     validation_steps=validBG.num_batches, epochs=config.num_epochs)
-except KeyboardInterrupt:
+except:
     model.save('model.h5')
     print('\n Model saved to model.h5')
     sys.exit()
